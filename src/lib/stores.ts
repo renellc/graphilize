@@ -6,7 +6,7 @@ const createGraphStore = () => {
     type: "undirected",
     weighted: false,
     vertices: [],
-    adjacencyMatrix: [],
+    adjMatrix: [],
   });
 
   return {
@@ -31,7 +31,7 @@ const createGraphStore = () => {
     removeVertex: (vertexIdx: number) => update((graph) => {
       switch (graph.type) {
         case "undirected":
-          return removeVertexFromUndirectedGraph({ graph, vertexIdx });
+          return removeVertexFromUndirectedGraph({ graph, vertex: vertexIdx });
         default:
           return graph;
       }
@@ -40,7 +40,7 @@ const createGraphStore = () => {
       const { fromVertexIdx, toVertexIdx, weight } = input;
       switch (graph.type) {
         case "undirected":
-          return addEdgeToUndirectedGraph({ graph, fromVertexIdx, toVertexIdx, weight })
+          return addEdgeToUndirectedGraph({ graph, vertexUIdx: fromVertexIdx, v: toVertexIdx, weight })
         default:
           break;
       }

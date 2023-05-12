@@ -47,7 +47,7 @@
         {#each graph.vertices as _, idx}
           <li>
             {idx}, connected to {JSON.stringify(
-              graph.adjacencyMatrix[idx]
+              graph.adjMatrix[idx]
                 .map((edge, idx) => ({ hasEdge: edge === 1, idx }))
                 .filter((curr) => curr.hasEdge)
                 .map((curr) => curr.idx)

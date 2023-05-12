@@ -1,14 +1,13 @@
 export type Vertex = Record<string, string>;
 
 export const GraphTypes = ["undirected", "directed"] as const;
-type GraphTypeInternal = typeof GraphTypes;
-export type GraphType = GraphTypeInternal[number];
+export type GraphType = typeof GraphTypes[number];
 
 export type Graph = {
   type: GraphType,
   weighted: boolean,
   vertices: Vertex[];
-  adjacencyMatrix: number[][];
+  adjMatrix: number[][];
 };
 
 /**
@@ -19,24 +18,24 @@ export function addVertexToUndirectedGraph(input: { graph: Graph }): Graph {
   const { graph: oldGraph } = input;
   const newGraph: Graph = { ...oldGraph };
 
-  for (let i = 0; i < oldGraph.adjacencyMatrix.length; i++) {
-    newGraph.adjacencyMatrix[i].push(0);
+  for (let i = 0; i < oldGraph.adjMatrix.length; i++) {
+    newGraph.adjMatrix[i].push(0);
   }
 
   newGraph.vertices.push({});
-  newGraph.adjacencyMatrix.push(new Array(newGraph.vertices.length).fill(0));
+  newGraph.adjMatrix.push(new Array(newGraph.vertices.length).fill(0));
   return newGraph;
 }
 
-export function removeVertexFromUndirectedGraph(input: { graph: Graph, vertexIdx: number }): Graph {
-  const { graph: oldGraph, vertexIdx } = input;
+export function removeVertexFromUndirectedGraph(input: { graph: Graph, vertex: number }): Graph {
+  const { graph: oldGraph, vertex } = input;
   const newGraph: Graph = { ...oldGraph };
 
-  newGraph.vertices.splice(vertexIdx, 1);
-  newGraph.adjacencyMatrix.splice(vertexIdx, 1);
+  newGraph.vertices.splice(vertex, 1);
+  newGraph.adjMatrix.splice(vertex, 1);
 
-  for (let i = 0; i < oldGraph.adjacencyMatrix.length; i++) {
-    newGraph.adjacencyMatrix[i].splice(vertexIdx, 1);
+  for (let i = 0; i < oldGraph.adjMatrix.length; i++) {
+    newGraph.adjMatrix[i].splice(vertex, 1);
   }
 
   return newGraph;
@@ -44,20 +43,34 @@ export function removeVertexFromUndirectedGraph(input: { graph: Graph, vertexIdx
 
 export function addEdgeToUndirectedGraph(input: {
   graph: Graph,
-  fromVertexIdx: number,
-  toVertexIdx: number,
+  u: number,
+  v: number,
   weight?: number,
 }): Graph {
-  const { graph: oldGraph, fromVertexIdx: from, toVertexIdx: to, weight } = input;
+  const { graph: oldGraph, u, v, weight } = input;
   const newGraph: Graph = { ...oldGraph };
 
   if (oldGraph.weighted) {
-    newGraph.adjacencyMatrix[from][to] = weight;
-    newGraph.adjacencyMatrix[to][from] = weight;
+    newGraph.adjMatrix[u][v] = weight;
+    newGraph.adjMatrix[v][u] = weight;
   } else {
-    newGraph.adjacencyMatrix[from][to] = 1;
-    newGraph.adjacencyMatrix[to][from] = 1;
+    newGraph.adjMatrix[u][v] = 1;
+    newGraph.adjMatrix[v][u] = 1;
   }
+
+  return newGraph;
+}
+
+export function removeEdgeFromUndirectedGraph(input: {
+  graph: Graph,
+  u: number,
+  v: number,
+}): Graph {
+  const { graph, u, v } = input;
+  const newGraph: Graph = { ...graph };
+
+  newGraph.adjMatrix[u][v] = 0;
+  newGraph.adjMatrix[v][u] = 0;
 
   return newGraph;
 }
