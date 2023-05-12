@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { addVertexToUndirectedGraph, removeVertexFromUndirectedGraph, type Graph, addEdgeToUndirectedGraph } from "./graph";
+import { addVertexToUndirectedGraph, removeVertexFromUndirectedGraph, type Graph, addEdgeToUndirectedGraph } from "./core/graph";
 
 const createGraphStore = () => {
   const { set, subscribe, update } = writable<Graph>({

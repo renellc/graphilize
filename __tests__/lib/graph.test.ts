@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import * as graphLib from "../../src/lib/graph";
+import * as graphLib from "@/core";
 
 describe("Graph operation tests", () => {
   describe("Undirected Graphs", () => {

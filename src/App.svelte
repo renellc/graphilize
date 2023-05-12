@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { GraphTypes, type Graph } from "./lib/graph";
-  import { graphStore } from "./lib/stores";
+  import { GraphTypes, type Graph } from "@/core";
+  import { graphStore } from "@/stores";
 
   let graph: Graph;
 
