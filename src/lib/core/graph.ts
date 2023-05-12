@@ -16,7 +16,7 @@ export type Graph = {
  * Adds a new vertex to a Graph
  * @returns A new Graph object with the added vertex.
  */
-export function addVertexToUndirectedGraph(input: { graph: Graph }): Graph {
+export function addVertexToGraph(input: { graph: Graph }): Graph {
   const { graph: oldGraph } = input;
   const newGraph: Graph = { ...oldGraph };
 
@@ -29,7 +29,7 @@ export function addVertexToUndirectedGraph(input: { graph: Graph }): Graph {
   return newGraph;
 }
 
-export function removeVertexFromUndirectedGraph(input: { graph: Graph, vertex: number }): Graph {
+export function removeVertixFromGraph(input: { graph: Graph, vertex: number }): Graph {
   const { graph: oldGraph, vertex } = input;
 
   if (vertex < 0 || vertex >= oldGraph.vertices.length) {
@@ -48,7 +48,7 @@ export function removeVertexFromUndirectedGraph(input: { graph: Graph, vertex: n
   return newGraph;
 }
 
-export function addEdgeToUndirectedGraph(input: {
+export function addEdgeToGraph(input: {
   graph: Graph,
   u: number,
   v: number,
@@ -65,17 +65,23 @@ export function addEdgeToUndirectedGraph(input: {
   const newGraph: Graph = { ...oldGraph };
 
   if (oldGraph.weighted) {
-    newGraph.adjMatrix[u][v] = weight;
-    newGraph.adjMatrix[v][u] = weight;
+    newGraph.adjMatrix[u][v] = weight ?? 1;
+
+    if (oldGraph.type === "undirected") {
+      newGraph.adjMatrix[v][u] = weight ?? 1;
+    }
   } else {
     newGraph.adjMatrix[u][v] = 1;
-    newGraph.adjMatrix[v][u] = 1;
+
+    if (oldGraph.type === "undirected") {
+      newGraph.adjMatrix[v][u] = 1;
+    }
   }
 
   return newGraph;
 }
 
-export function removeEdgeFromUndirectedGraph(input: {
+export function removeEdgeFromGraph(input: {
   graph: Graph,
   u: number,
   v: number,

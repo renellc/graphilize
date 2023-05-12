@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { addVertexToUndirectedGraph, removeVertexFromUndirectedGraph, type Graph, addEdgeToUndirectedGraph } from "./core/graph";
+import { addVertexToGraph, removeVertixFromGraph, type Graph, addEdgeToGraph } from "@/core";
 
 const createGraphStore = () => {
   const { set, subscribe, update } = writable<Graph>({
@@ -22,7 +22,7 @@ const createGraphStore = () => {
     addVertex: () => update((graph) => {
       switch (graph.type) {
         case "undirected": {
-          return addVertexToUndirectedGraph({ graph });
+          return addVertexToGraph({ graph });
         }
         default:
           return graph;
@@ -31,7 +31,7 @@ const createGraphStore = () => {
     removeVertex: (vertexIdx: number) => update((graph) => {
       switch (graph.type) {
         case "undirected":
-          return removeVertexFromUndirectedGraph({ graph, vertex: vertexIdx });
+          return removeVertixFromGraph({ graph, vertex: vertexIdx });
         default:
           return graph;
       }
@@ -40,7 +40,7 @@ const createGraphStore = () => {
       const { fromVertexIdx, toVertexIdx, weight } = input;
       switch (graph.type) {
         case "undirected":
-          return addEdgeToUndirectedGraph({ graph, vertexUIdx: fromVertexIdx, v: toVertexIdx, weight })
+          return addEdgeToGraph({ graph, u: fromVertexIdx, v: toVertexIdx, weight })
         default:
           break;
       }

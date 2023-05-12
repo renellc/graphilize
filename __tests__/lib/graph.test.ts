@@ -12,7 +12,7 @@ describe("Graph operation tests", () => {
         adjMatrix: [],
       };
 
-      const newGraph = graphLib.addVertexToUndirectedGraph({ graph });
+      const newGraph = graphLib.addVertexToGraph({ graph });
       expect(newGraph.vertices.length).toStrictEqual(1);
       expect(newGraph.adjMatrix.length).toStrictEqual(1);
     });
@@ -25,13 +25,13 @@ describe("Graph operation tests", () => {
         adjMatrix: [],
       };
 
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
 
-      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 1 });
-      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 2 });
+      graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 1 });
+      graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 2 });
       expect(graph.adjMatrix[0][1]).toStrictEqual(1);
       expect(graph.adjMatrix[1][0]).toStrictEqual(1);
       expect(graph.adjMatrix[0][2]).toStrictEqual(1);
@@ -46,10 +46,10 @@ describe("Graph operation tests", () => {
         adjMatrix: [],
       };
 
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 1 });
-      graph = graphLib.removeEdgeFromUndirectedGraph({ graph, u: 1, v: 0 });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 1 });
+      graph = graphLib.removeEdgeFromGraph({ graph, u: 1, v: 0 });
       expect(graph.adjMatrix[0][1]).toStrictEqual(0);
       expect(graph.adjMatrix[1][0]).toStrictEqual(0);
     });
@@ -62,15 +62,15 @@ describe("Graph operation tests", () => {
         adjMatrix: [],
       };
 
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
 
-      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 1 });
-      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 2 });
+      graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 1 });
+      graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 2 });
 
-      graph = graphLib.removeVertexFromUndirectedGraph({ graph, vertex: 0 });
+      graph = graphLib.removeVertixFromGraph({ graph, vertex: 0 });
       expect(graph.vertices.length).toStrictEqual(3);
       expect(graph.adjMatrix.length).toStrictEqual(3);
       expect(graph.adjMatrix[0][1]).toEqual(0);
@@ -87,9 +87,9 @@ describe("Graph operation tests", () => {
         adjMatrix: [],
       };
 
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
 
-      const shouldThrowError = () => graphLib.removeVertexFromUndirectedGraph({ graph, vertex: -1 });
+      const shouldThrowError = () => graphLib.removeVertixFromGraph({ graph, vertex: -1 });
       expect(shouldThrowError).toThrow(graphLib.InvalidVertexError);
     });
 
@@ -101,11 +101,11 @@ describe("Graph operation tests", () => {
         adjMatrix: [],
       };
 
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addVertexToUndirectedGraph({ graph });
-      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 1 });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addVertexToGraph({ graph });
+      graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 1 });
 
-      const shouldThrowError = () => graphLib.removeEdgeFromUndirectedGraph({ graph, u: 0, v: 3 });
+      const shouldThrowError = () => graphLib.removeEdgeFromGraph({ graph, u: 0, v: 3 });
       expect(shouldThrowError).toThrow(graphLib.InvalidEdgeError);
     });
   });
