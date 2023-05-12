@@ -38,6 +38,22 @@ describe("Graph operation tests", () => {
       expect(graph.adjMatrix[2][0]).toStrictEqual(1);
     });
 
+    it("Should correctly remove an edge from an undirected graph", () => {
+      let graph: graphLib.Graph = {
+        type: "undirected",
+        weighted: false,
+        vertices: [],
+        adjMatrix: [],
+      };
+
+      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 1 });
+      graph = graphLib.removeEdgeFromUndirectedGraph({ graph, u: 1, v: 0 });
+      expect(graph.adjMatrix[0][1]).toStrictEqual(0);
+      expect(graph.adjMatrix[1][0]).toStrictEqual(0);
+    });
+
     it("Should correctly remove a vertex from an undirected graph", () => {
       let graph: graphLib.Graph = {
         type: "undirected",
@@ -61,6 +77,36 @@ describe("Graph operation tests", () => {
       expect(graph.adjMatrix[1][0]).toEqual(0);
       expect(graph.adjMatrix[0][2]).toEqual(0);
       expect(graph.adjMatrix[2][0]).toEqual(0);
+    });
+
+    it("Should throw an error when removing a vertex if the vertex is invalid", () => {
+      let graph: graphLib.Graph = {
+        type: "undirected",
+        weighted: false,
+        vertices: [],
+        adjMatrix: [],
+      };
+
+      graph = graphLib.addVertexToUndirectedGraph({ graph });
+
+      const shouldThrowError = () => graphLib.removeVertexFromUndirectedGraph({ graph, vertex: -1 });
+      expect(shouldThrowError).toThrow(graphLib.InvalidVertexError);
+    });
+
+    it("Should throw an error when removing a vertex if the vertex is invalid", () => {
+      let graph: graphLib.Graph = {
+        type: "undirected",
+        weighted: false,
+        vertices: [],
+        adjMatrix: [],
+      };
+
+      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addVertexToUndirectedGraph({ graph });
+      graph = graphLib.addEdgeToUndirectedGraph({ graph, u: 0, v: 1 });
+
+      const shouldThrowError = () => graphLib.removeEdgeFromUndirectedGraph({ graph, u: 0, v: 3 });
+      expect(shouldThrowError).toThrow(graphLib.InvalidEdgeError);
     });
   });
 });

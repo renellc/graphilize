@@ -1,3 +1,5 @@
+import { InvalidEdgeError, InvalidVertexError } from "./errors";
+
 export type Vertex = Record<string, string>;
 
 export const GraphTypes = ["undirected", "directed"] as const;
@@ -29,6 +31,11 @@ export function addVertexToUndirectedGraph(input: { graph: Graph }): Graph {
 
 export function removeVertexFromUndirectedGraph(input: { graph: Graph, vertex: number }): Graph {
   const { graph: oldGraph, vertex } = input;
+
+  if (vertex < 0 || vertex >= oldGraph.vertices.length) {
+    throw new InvalidVertexError(`Vertex ${vertex} is an invalid vertex: does not exist`);
+  }
+
   const newGraph: Graph = { ...oldGraph };
 
   newGraph.vertices.splice(vertex, 1);
@@ -48,6 +55,13 @@ export function addEdgeToUndirectedGraph(input: {
   weight?: number,
 }): Graph {
   const { graph: oldGraph, u, v, weight } = input;
+
+  const isUValidVert = u >= 0 && u < oldGraph.vertices.length;
+  const isVValidVert = v >= 0 && v < oldGraph.vertices.length;
+  if (!isUValidVert || !isVValidVert) {
+    throw new InvalidVertexError("One of vertices U or V is invalid");
+  }
+
   const newGraph: Graph = { ...oldGraph };
 
   if (oldGraph.weighted) {
@@ -66,8 +80,15 @@ export function removeEdgeFromUndirectedGraph(input: {
   u: number,
   v: number,
 }): Graph {
-  const { graph, u, v } = input;
-  const newGraph: Graph = { ...graph };
+  const { graph: oldGraph, u, v } = input;
+
+  const isUValidVert = u >= 0 && u < oldGraph.vertices.length;
+  const isVValidVert = v >= 0 && v < oldGraph.vertices.length;
+  if (!isUValidVert || !isVValidVert) {
+    throw new InvalidEdgeError(`Edge [${u}, ${v}] is an invalid vertex`);
+  }
+
+  const newGraph: Graph = { ...oldGraph };
 
   newGraph.adjMatrix[u][v] = 0;
   newGraph.adjMatrix[v][u] = 0;
