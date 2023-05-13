@@ -8,6 +8,7 @@ export default defineConfig({
     alias: {
       "@/core": path.resolve("./src/lib/core"),
       "@/stores": path.resolve("./src/lib/stores"),
+      "@/components": path.resolve("./src/lib/components"),
     },
   },
   plugins: [svelte()],
