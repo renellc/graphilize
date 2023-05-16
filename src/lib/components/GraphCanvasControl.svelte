@@ -9,13 +9,6 @@
   import contentSave from "@iconify/icons-mdi/content-save";
   import deleteIcon from "@iconify/icons-mdi/delete";
   import { uiStore, type UiStore } from "@/stores";
-  import { onDestroy } from "svelte";
-
-  let ui: UiStore;
-  const storeUiUnsubscribe = uiStore.subscribe((store) => (ui = store));
-  onDestroy(() => {
-    storeUiUnsubscribe();
-  });
 
   const iconGroups: {
     name: string;
@@ -23,40 +16,24 @@
     control: UiStore["selectedControl"];
   }[][] = [
     [
-      { name: "Graph Settings", icon: graphIcon, control: "graphSettings" },
-      { name: "Algorithms", icon: functionIcon, control: "algorithms" },
+      { name: "Graph Settings (`)", icon: graphIcon, control: "graphSettings" },
+      { name: "Algorithms (0)", icon: functionIcon, control: "algorithms" },
     ],
     [
-      { name: "Select", icon: cursorDefault, control: "select" },
-      { name: "Add Vertex", icon: checkboxBlankCircle, control: "addVertex" },
-      { name: "Add Edge", icon: minusIcon, control: "addEdge" },
-      { name: "Remove Item", icon: eraserIcon, control: "removeItem" },
+      { name: "Select (1)", icon: cursorDefault, control: "select" },
+      {
+        name: "Add Vertex (2)",
+        icon: checkboxBlankCircle,
+        control: "addVertex",
+      },
+      { name: "Add Edge (3)", icon: minusIcon, control: "addEdge" },
+      { name: "Remove Item (4)", icon: eraserIcon, control: "removeItem" },
     ],
     [
       { name: "Export Graph", icon: contentSave, control: "save" },
       { name: "Clear Graph", icon: deleteIcon, control: "clear" },
     ],
   ];
-
-  let lastSelected: HTMLElement;
-
-  function onGraphCrontrolItemSelected(
-    event: Event & { currentTarget: EventTarget & HTMLInputElement }
-  ) {
-    const { currentTarget } = event;
-    if (!currentTarget.checked) {
-      return;
-    }
-
-    const parent = currentTarget.parentElement;
-    parent.style.backgroundColor = "#e7e7e7";
-
-    if (lastSelected) {
-      lastSelected.style.backgroundColor = "transparent";
-    }
-
-    lastSelected = parent;
-  }
 </script>
 
 <div class="graph-control__container">
@@ -71,10 +48,7 @@
           type="radio"
           name="graph-control__item"
           id={name}
-          on:change={(event) => {
-            onGraphCrontrolItemSelected(event);
-            uiStore.setSelectedControl(control);
-          }}
+          checked={control === $uiStore.selectedControl}
         />
         <Icon {icon} width="24" color="#171717" />
       </label>
@@ -117,16 +91,26 @@
     border-radius: 2px;
   }
 
+  .graph-control__container .graph-control__item:hover {
+    cursor: pointer;
+  }
+
   .graph-control__container .graph-control__item > input[type="radio"] {
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0;
+    appearance: none;
+    z-index: -1;
+
+    padding: 0;
+    margin: 0;
 
     width: 100%;
     height: 100%;
+  }
 
-    cursor: pointer;
+  .graph-control__container .graph-control__item > input[type="radio"]:checked {
+    background-color: #e7e7e7;
   }
 
   .graph-control__separator {
