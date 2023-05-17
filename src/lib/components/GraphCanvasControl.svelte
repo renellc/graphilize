@@ -49,7 +49,7 @@
           name="graph-control__item"
           id={name}
           checked={control === $uiStore.selectedControl}
-          on:change={() => uiStore.selectControl("addVertex")}
+          on:change={() => uiStore.selectControl(control)}
         />
         <Icon {icon} width="24" color="#171717" />
       </label>
