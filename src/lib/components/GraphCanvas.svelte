@@ -1,12 +1,13 @@
 <script lang="ts">
-  import type Konva from "konva";
-  import { onDestroy } from "svelte";
-  import { Circle, Layer, Stage } from "svelte-konva";
+  import Konva from "konva";
+  import { onDestroy, onMount } from "svelte";
 
   import { uiStore, graphStore } from "@/stores";
-  import { addVertexToGraph } from "@/core";
 
   let stage: Konva.Stage;
+  let mainLayer: Konva.Layer;
+
+  const circleRadius = 20;
 
   const unsubUi = uiStore.subscribe((store) => {
     if (!stage) {
@@ -26,23 +27,22 @@
     unsubUi();
   });
 
-  function placeVertexOnStage() {
-    if ($uiStore.selectedControl === "addVertex") {
-      const { x, y } = stage.getRelativePointerPosition();
-      graphStore.addVertex({ x, y });
-    }
-  }
-</script>
+  onMount(() => {
+    stage = new Konva.Stage({
+      container: "graphCanvasContainer",
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
 
-<Stage
-  bind:handle={stage}
-  config={{
-    width: window.innerWidth,
-    height: window.innerHeight,
-  }}
-  on:mouseup={placeVertexOnStage}
-  on:touchend={placeVertexOnStage}
-  on:wheel={({ detail: event }) => {
+    mainLayer = new Konva.Layer();
+    stage.add(mainLayer);
+
+    stage.on("mouseup", addVertex);
+    stage.on("touchend", addVertex);
+    stage.on("wheel", handleZoom);
+  });
+
+  function handleZoom(event: Konva.KonvaEventObject<WheelEvent>) {
     const oldScale = stage.scaleX();
     const currPointer = stage.getRelativePointerPosition();
     const mousePointTo = {
@@ -52,9 +52,9 @@
 
     let newScale;
     if (event.evt.deltaY > 0) {
-      newScale = oldScale * 1.05;
+      newScale = oldScale * 1.02;
     } else {
-      newScale = oldScale / 1.05;
+      newScale = oldScale / 1.02;
     }
 
     const newPos = {
@@ -64,18 +64,34 @@
 
     stage.scale({ x: newScale, y: newScale });
     stage.position(newPos);
-  }}
->
-  <Layer>
-    {#each $graphStore.vertices as vertex}
-      <Circle
-        config={{
+  }
+
+  function addVertex() {
+    if ($uiStore.selectedControl === "addVertex") {
+      const { x, y } = stage.getRelativePointerPosition();
+      graphStore.addVertex({ x, y });
+    }
+  }
+
+  function drawVertices() {
+    if (!stage) {
+      return;
+    }
+
+    for (let i = 0; i < $graphStore.vertices.length; i++) {
+      const vertex = $graphStore.vertices[i];
+      mainLayer.add(
+        new Konva.Circle({
           fill: "blue",
+          radius: circleRadius,
           x: vertex.x,
           y: vertex.y,
-          radius: 15,
-        }}
-      />
-    {/each}
-  </Layer>
-</Stage>
+        })
+      );
+    }
+  }
+
+  $: $graphStore, drawVertices();
+</script>
+
+<div id="graphCanvasContainer" />

@@ -4,9 +4,6 @@ dependencies:
   konva:
     specifier: ^9.0.1
     version: 9.0.1
-  svelte-konva:
-    specifier: ^0.1.1
-    version: 0.1.1(konva@9.0.1)(svelte@3.57.0)
 
 devDependencies:
   '@iconify/icons-mdi':
@@ -1060,16 +1057,6 @@ packages:
       svelte: 3.57.0
     dev: true
 
-  /svelte-konva@0.1.1(konva@9.0.1)(svelte@3.57.0):
-    resolution: {integrity: sha512-rsAMWJIgwhaG9H32autmw7ZpwxKEBe1f7Snfj2fDokTv1y7nkT/BRvMDOdv9JwnR+VGjCoeKiZ2yToOoLiBR9g==}
-    peerDependencies:
-      konva: '>=8'
-      svelte: '>=3'
-    dependencies:
-      konva: 9.0.1
-      svelte: 3.57.0
-    dev: false
-
   /svelte-preprocess@4.10.7(svelte@3.57.0)(typescript@5.0.2):
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}
     engines: {node: '>= 9.11.2'}
@@ -1124,6 +1111,7 @@ packages:
   /svelte@3.57.0:
     resolution: {integrity: sha512-WMXEvF+RtAaclw0t3bPDTUe19pplMlfyKDsixbHQYgCWi9+O9VN0kXU1OppzrB9gPAvz4NALuoca2LfW2bOjTQ==}
     engines: {node: '>= 8'}
+    dev: true
 
   /time-zone@1.0.0:
     resolution: {integrity: sha512-TIsDdtKo6+XrPtiTm1ssmMngN1sAhyKnTO2kunQWqNPWIVvCm15Wmw4SWInwTVgJ5u/Tr04+8Ei9TNcw4x4ONA==}
