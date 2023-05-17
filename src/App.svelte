@@ -15,6 +15,11 @@
         onPressRelease: () => uiStore.toggleControl("drag"),
       },
       {
+        shortcut: ["Meta"],
+        onPressDown: () => uiStore.toggleControl("drag"),
+        onPressRelease: () => uiStore.toggleControl("drag"),
+      },
+      {
         shortcut: ["`"],
         onPressDown: () => uiStore.selectControl("graphSettings"),
       },

@@ -1,6 +1,6 @@
 import { InvalidEdgeError, InvalidVertexError } from "./errors";
 
-export type Vertex = Record<string, string>;
+export type Vertex = { x: number, y: number };
 
 export const GraphTypes = ["undirected", "directed"] as const;
 export type GraphType = typeof GraphTypes[number];
@@ -16,15 +16,15 @@ export type Graph = {
  * Adds a new vertex to a Graph
  * @returns A new Graph object with the added vertex.
  */
-export function addVertexToGraph(input: { graph: Graph }): Graph {
-  const { graph: oldGraph } = input;
+export function addVertexToGraph(input: { graph: Graph, x: number, y: number }): Graph {
+  const { graph: oldGraph, x, y } = input;
   const newGraph: Graph = { ...oldGraph };
 
   for (let i = 0; i < oldGraph.adjMatrix.length; i++) {
     newGraph.adjMatrix[i].push(0);
   }
 
-  newGraph.vertices.push({});
+  newGraph.vertices.push({ x, y });
   newGraph.adjMatrix.push(new Array(newGraph.vertices.length).fill(0));
   return newGraph;
 }

@@ -19,10 +19,10 @@ const createGraphStore = () => {
       graph.type = type;
       return graph;
     }),
-    addVertex: () => update((graph) => {
+    addVertex: (coords: { x: number, y: number }) => update((graph) => {
       switch (graph.type) {
         case "undirected": {
-          return addVertexToGraph({ graph });
+          return addVertexToGraph({ graph, x: coords.x, y: coords.y });
         }
         default:
           return graph;
