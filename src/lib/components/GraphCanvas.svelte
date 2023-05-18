@@ -1,26 +1,49 @@
 <script lang="ts">
   import Konva from "konva";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import { uiStore, graphStore } from "@/stores";
+  import { canvasCreateVertex } from "@/util";
+
+  const STAGE_WIDTH = 3000;
+  const STAGE_HEIGHT = 3000;
 
   let stage: Konva.Stage;
   let mainLayer: Konva.Layer;
 
-  const circleRadius = 20;
-
   onMount(() => {
     stage = new Konva.Stage({
       container: "graphCanvasContainer",
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: STAGE_WIDTH,
+      height: STAGE_HEIGHT,
     });
 
     mainLayer = new Konva.Layer();
     stage.add(mainLayer);
 
-    stage.on("mouseup", addVertex);
-    stage.on("touchend", addVertex);
+    stage.on("mouseup", (event) => {
+      switch ($uiStore.selectedControl) {
+        case "addVertex":
+          addVertex({ x: event.evt.x, y: event.evt.y });
+          break;
+        default:
+          break;
+      }
+    });
+
+    stage.on("touchend", (event) => {
+      switch ($uiStore.selectedControl) {
+        case "addVertex":
+          addVertex({
+            x: event.evt.touches[0].screenX,
+            y: event.evt.touches[0].screenY,
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
     stage.on("wheel", handleZoom);
   });
 
@@ -62,52 +85,21 @@
     stage.position(newPos);
   }
 
-  function addVertex() {
+  function addVertex(input: { x: number; y: number }) {
+    const { x, y } = input;
+
     if ($uiStore.selectedControl === "addVertex") {
-      const { x, y } = stage.getRelativePointerPosition();
-      graphStore.addVertex({ x, y });
+      graphStore.addVertex();
+
+      const vertex = canvasCreateVertex({
+        position: { x, y },
+        label: ($graphStore.adjMatrix.length - 1).toString(),
+      });
+
+      mainLayer.add(vertex);
     }
   }
 
-  function drawVertices() {
-    if (!stage) {
-      return;
-    }
-
-    for (let i = 0; i < $graphStore.vertices.length; i++) {
-      const { x, y } = $graphStore.vertices[i];
-      const group = new Konva.Group({
-        x,
-        y,
-        width: circleRadius * 2,
-        height: circleRadius * 2,
-      });
-
-      const circle = new Konva.Circle({
-        fill: "white",
-        radius: circleRadius,
-        stroke: "#171717",
-        strokeWidth: 1,
-      });
-
-      const text = new Konva.Text({
-        text: i.toString(),
-        fill: "#171717",
-        fontSize: 16,
-        align: "center",
-        verticalAlign: "middle",
-      });
-
-      text.x(-text.width() / 2);
-      text.y(-text.height() / 2);
-
-      group.add(circle);
-      group.add(text);
-      mainLayer.add(group);
-    }
-  }
-
-  $: $graphStore, drawVertices();
   $: $uiStore, updateCursorStyle();
 </script>
 

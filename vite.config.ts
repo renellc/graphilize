@@ -9,6 +9,7 @@ export default defineConfig({
       "@/core": path.resolve("./src/lib/core"),
       "@/stores": path.resolve("./src/lib/stores"),
       "@/components": path.resolve("./src/lib/components"),
+      "@/util": path.resolve("./src/lib/util"),
     },
   },
   plugins: [svelte()],

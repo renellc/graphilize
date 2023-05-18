@@ -30,6 +30,12 @@
       ],
       "@/components/*": [
         "src/lib/components/*"
+      ],
+      "@/util": [
+        "src/lib/util"
+      ],
+      "@/util/*": [
+        "src/lib/util/*"
       ]
     }
   },

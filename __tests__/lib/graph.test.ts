@@ -8,12 +8,10 @@ describe("Graph operation tests", () => {
       const graph: graphLib.Graph = {
         type: "undirected",
         weighted: false,
-        vertices: [],
         adjMatrix: [],
       };
 
       const newGraph = graphLib.addVertexToGraph({ graph });
-      expect(newGraph.vertices.length).toStrictEqual(1);
       expect(newGraph.adjMatrix.length).toStrictEqual(1);
     });
 
@@ -21,7 +19,6 @@ describe("Graph operation tests", () => {
       let graph: graphLib.Graph = {
         type: "undirected",
         weighted: false,
-        vertices: [],
         adjMatrix: [],
       };
 
@@ -42,7 +39,6 @@ describe("Graph operation tests", () => {
       let graph: graphLib.Graph = {
         type: "undirected",
         weighted: false,
-        vertices: [],
         adjMatrix: [],
       };
 
@@ -58,7 +54,6 @@ describe("Graph operation tests", () => {
       let graph: graphLib.Graph = {
         type: "undirected",
         weighted: false,
-        vertices: [],
         adjMatrix: [],
       };
 
@@ -70,8 +65,8 @@ describe("Graph operation tests", () => {
       graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 1 });
       graph = graphLib.addEdgeToGraph({ graph, u: 0, v: 2 });
 
-      graph = graphLib.removeVertixFromGraph({ graph, vertex: 0 });
-      expect(graph.vertices.length).toStrictEqual(3);
+      graph = graphLib.removeVertexFromGraph({ graph, vertex: 0 });
+      expect(graph.adjMatrix.length).toStrictEqual(3);
       expect(graph.adjMatrix.length).toStrictEqual(3);
       expect(graph.adjMatrix[0][1]).toEqual(0);
       expect(graph.adjMatrix[1][0]).toEqual(0);
@@ -83,13 +78,12 @@ describe("Graph operation tests", () => {
       let graph: graphLib.Graph = {
         type: "undirected",
         weighted: false,
-        vertices: [],
         adjMatrix: [],
       };
 
       graph = graphLib.addVertexToGraph({ graph });
 
-      const shouldThrowError = () => graphLib.removeVertixFromGraph({ graph, vertex: -1 });
+      const shouldThrowError = () => graphLib.removeVertexFromGraph({ graph, vertex: -1 });
       expect(shouldThrowError).toThrow(graphLib.InvalidVertexError);
     });
 
@@ -97,7 +91,6 @@ describe("Graph operation tests", () => {
       let graph: graphLib.Graph = {
         type: "undirected",
         weighted: false,
-        vertices: [],
         adjMatrix: [],
       };
 

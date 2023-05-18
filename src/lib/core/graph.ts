@@ -1,14 +1,11 @@
 import { InvalidEdgeError, InvalidVertexError } from "./errors";
 
-export type Vertex = { x: number, y: number };
-
 export const GraphTypes = ["undirected", "directed"] as const;
 export type GraphType = typeof GraphTypes[number];
 
 export type Graph = {
   type: GraphType,
   weighted: boolean,
-  vertices: Vertex[];
   adjMatrix: number[][];
 };
 
@@ -16,29 +13,27 @@ export type Graph = {
  * Adds a new vertex to a Graph
  * @returns A new Graph object with the added vertex.
  */
-export function addVertexToGraph(input: { graph: Graph, x: number, y: number }): Graph {
-  const { graph: oldGraph, x, y } = input;
+export function addVertexToGraph(input: { graph: Graph }): Graph {
+  const { graph: oldGraph } = input;
   const newGraph: Graph = { ...oldGraph };
 
   for (let i = 0; i < oldGraph.adjMatrix.length; i++) {
     newGraph.adjMatrix[i].push(0);
   }
 
-  newGraph.vertices.push({ x, y });
-  newGraph.adjMatrix.push(new Array(newGraph.vertices.length).fill(0));
+  newGraph.adjMatrix.push(new Array(newGraph.adjMatrix.length + 1).fill(0));
   return newGraph;
 }
 
-export function removeVertixFromGraph(input: { graph: Graph, vertex: number }): Graph {
+export function removeVertexFromGraph(input: { graph: Graph, vertex: number }): Graph {
   const { graph: oldGraph, vertex } = input;
 
-  if (vertex < 0 || vertex >= oldGraph.vertices.length) {
+  if (vertex < 0 || vertex >= oldGraph.adjMatrix.length) {
     throw new InvalidVertexError(`Vertex ${vertex} is an invalid vertex: does not exist`);
   }
 
   const newGraph: Graph = { ...oldGraph };
 
-  newGraph.vertices.splice(vertex, 1);
   newGraph.adjMatrix.splice(vertex, 1);
 
   for (let i = 0; i < oldGraph.adjMatrix.length; i++) {
@@ -56,8 +51,8 @@ export function addEdgeToGraph(input: {
 }): Graph {
   const { graph: oldGraph, u, v, weight } = input;
 
-  const isUValidVert = u >= 0 && u < oldGraph.vertices.length;
-  const isVValidVert = v >= 0 && v < oldGraph.vertices.length;
+  const isUValidVert = u >= 0 && u < oldGraph.adjMatrix.length;
+  const isVValidVert = v >= 0 && v < oldGraph.adjMatrix.length;
   if (!isUValidVert || !isVValidVert) {
     throw new InvalidVertexError("One of vertices U or V is invalid");
   }
@@ -88,8 +83,8 @@ export function removeEdgeFromGraph(input: {
 }): Graph {
   const { graph: oldGraph, u, v } = input;
 
-  const isUValidVert = u >= 0 && u < oldGraph.vertices.length;
-  const isVValidVert = v >= 0 && v < oldGraph.vertices.length;
+  const isUValidVert = u >= 0 && u < oldGraph.adjMatrix.length;
+  const isVValidVert = v >= 0 && v < oldGraph.adjMatrix.length;
   if (!isUValidVert || !isVValidVert) {
     throw new InvalidEdgeError(`Edge [${u}, ${v}] is an invalid vertex`);
   }
