@@ -1,51 +1,18 @@
 <script lang="ts">
-  import Konva from "konva";
   import { onMount } from "svelte";
 
-  import { uiStore, graphStore } from "@/stores";
+  import Konva from "konva";
+  import { Stage, Layer } from "svelte-konva";
+
+  import { uiStore, graphStore, canvasStore } from "@/stores";
   import { canvasCreateVertex } from "@/util";
+  import Vertex from "./Vertex.svelte";
 
   const STAGE_WIDTH = 3000;
   const STAGE_HEIGHT = 3000;
 
   let stage: Konva.Stage;
   let mainLayer: Konva.Layer;
-
-  onMount(() => {
-    stage = new Konva.Stage({
-      container: "graphCanvasContainer",
-      width: STAGE_WIDTH,
-      height: STAGE_HEIGHT,
-    });
-
-    mainLayer = new Konva.Layer();
-    stage.add(mainLayer);
-
-    stage.on("mouseup", (event) => {
-      switch ($uiStore.selectedControl) {
-        case "addVertex":
-          addVertex({ x: event.evt.x, y: event.evt.y });
-          break;
-        default:
-          break;
-      }
-    });
-
-    stage.on("touchend", (event) => {
-      switch ($uiStore.selectedControl) {
-        case "addVertex":
-          addVertex({
-            x: event.evt.touches[0].screenX,
-            y: event.evt.touches[0].screenY,
-          });
-          break;
-        default:
-          break;
-      }
-    });
-
-    stage.on("wheel", handleZoom);
-  });
 
   function updateCursorStyle() {
     if (!stage) {
@@ -90,17 +57,30 @@
 
     if ($uiStore.selectedControl === "addVertex") {
       graphStore.addVertex();
-
-      const vertex = canvasCreateVertex({
-        position: { x, y },
-        label: ($graphStore.adjMatrix.length - 1).toString(),
+      canvasStore.addVertexElement({
+        vertexIdx: $graphStore.adjMatrix.length - 1,
+        x,
+        y,
       });
-
-      mainLayer.add(vertex);
     }
   }
 
   $: $uiStore, updateCursorStyle();
 </script>
 
-<div id="graphCanvasContainer" />
+<Stage
+  bind:handle={stage}
+  config={{ width: STAGE_WIDTH, height: STAGE_HEIGHT }}
+  on:wheel={(event) => handleZoom(event.detail)}
+  on:mouseup={(event) => {
+    if ($uiStore.selectedControl === "addVertex") {
+      addVertex({ x: event.detail.evt.x, y: event.detail.evt.y });
+    }
+  }}
+>
+  <Layer bind:handle={mainLayer}>
+    {#each Array.from($canvasStore.vertexElements) as [vertexIdx, { x, y }]}
+      <Vertex {x} {y} label={vertexIdx.toString()} />
+    {/each}
+  </Layer>
+</Stage>
