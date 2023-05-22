@@ -36,6 +36,15 @@
       text.y(-text.height() / 2);
       text.moveToTop();
     })();
+
+  $: label,
+    (() => {
+      if (!text || label === null) {
+        return;
+      }
+
+      console.log(label);
+    })();
 </script>
 
 <Group

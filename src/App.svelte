@@ -4,8 +4,10 @@
   import { uiStore } from "@/stores";
   import { KeyboardShortcutStore } from "@/stores/kbshortcut-store";
   import { onDestroy, onMount } from "svelte";
+  import Konva from "konva";
 
   onMount(() => {
+    Konva.pixelRatio = 1.5;
     KeyboardShortcutStore.initialize();
 
     KeyboardShortcutStore.registerShortcuts([

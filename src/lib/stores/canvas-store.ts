@@ -1,7 +1,5 @@
 import { writable } from "svelte/store";
 
-import type Konva from "konva";
-
 export type CanvasStore = {
   isDrawing: boolean;
   vertexElements: Map<number, { x: number, y: number }>;
@@ -9,7 +7,7 @@ export type CanvasStore = {
 };
 
 const createCanvasStore = () => {
-  const { subscribe, set, update } = writable<CanvasStore>({
+  const { subscribe, update } = writable<CanvasStore>({
     isDrawing: false,
     vertexElements: new Map(),
     edgeElements: []
@@ -29,6 +27,28 @@ const createCanvasStore = () => {
       const { x, y } = input;
       const store = { ...prev, vertexElements: new Map(prev.vertexElements), edgeElements: [...prev.edgeElements] };
       store.vertexElements.set(vertexIdx, { x, y });
+      return store;
+    }),
+    removeVertexElement: (vertexIdx: number) => update((prev) => {
+      const store = { ...prev, vertexElements: new Map(prev.vertexElements), edgeElements: [...prev.edgeElements] };
+
+      // Update vertex indices
+      const vertices = [...store.vertexElements].sort((a, b) => a[0] - b[0]);
+      for (let i = vertexIdx; i < vertices.length; i++) {
+        vertices[i][0] -= 1;
+      }
+
+      vertices.splice(vertexIdx, 1);
+      store.vertexElements = new Map(vertices);
+
+      store.edgeElements = store.edgeElements
+        .filter((edge) => edge.fromVertex !== vertexIdx && edge.toVertex !== vertexIdx) // Removes edges
+        .map((edge) => ({  // Updates all vertex indices if vertex being removed is less than it
+          ...edge,
+          fromVertex: edge.fromVertex > vertexIdx ? edge.fromVertex - 1 : edge.fromVertex,
+          toVertex: edge.toVertex > vertexIdx ? edge.toVertex - 1 : edge.toVertex,
+        }));
+
       return store;
     }),
     addEdgeElement: (input: { fromVertexId: number, toVertexId: number, directed?: boolean }) => update((prev) => {

@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import Konva from "konva";
   import { Stage, Layer, Line } from "svelte-konva";
 
@@ -99,7 +97,7 @@
   }}
 >
   <Layer bind:handle={mainLayer}>
-    {#each Array.from($canvasStore.vertexElements) as [vertexIdx, { x, y }]}
+    {#each [...$canvasStore.vertexElements] as [vertexIdx, { x, y }]}
       <Vertex
         {x}
         {y}
@@ -126,15 +124,25 @@
           }
         }}
         onMouseUp={(event) => {
-          if ($uiStore.selectedControl === "addEdge") {
-            if ($canvasStore.isDrawing) {
-              canvasStore.addEdgeElement({
-                fromVertexId: drawingEdge.startVertex,
-                toVertexId: vertexIdx,
-              });
-              canvasStore.setIsDrawing(false);
-              drawingEdge.line.remove();
+          switch ($uiStore.selectedControl) {
+            case "addEdge": {
+              if ($canvasStore.isDrawing) {
+                canvasStore.addEdgeElement({
+                  fromVertexId: drawingEdge.startVertex,
+                  toVertexId: vertexIdx,
+                });
+                canvasStore.setIsDrawing(false);
+                drawingEdge.line.remove();
+              }
+              break;
             }
+            case "removeItem": {
+              graphStore.removeVertex(vertexIdx);
+              canvasStore.removeVertexElement(vertexIdx);
+              break;
+            }
+            default:
+              break;
           }
         }}
       />
