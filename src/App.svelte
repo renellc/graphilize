@@ -5,6 +5,7 @@
   import { KeyboardShortcutStore } from "@/stores/kbshortcut-store";
   import { onDestroy, onMount } from "svelte";
   import Konva from "konva";
+  import GraphPanel from "@/components/GraphPanel.svelte";
 
   onMount(() => {
     Konva.pixelRatio = 1.5;
@@ -56,4 +57,5 @@
 <main>
   <GraphCanvas />
   <GraphCanvasControl />
+  <GraphPanel />
 </main>
