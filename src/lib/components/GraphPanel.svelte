@@ -3,6 +3,7 @@
   import graphIcon from "@iconify/icons-mdi/graph";
   import functionIcon from "@iconify/icons-mdi/function";
   import { graphStore } from "@/stores";
+  import Collapsible from "./Collapsible.svelte";
 
   let selectedNavigation: "details" | "algorithms" = "details";
 </script>
@@ -28,11 +29,17 @@
 
   <div class="graph-panel__content">
     {#if selectedNavigation === "details"}
-      <ul>
-        {#each $graphStore.adjMatrix as _, idx}
-          <li>Vertex {idx}</li>
-        {/each}
-      </ul>
+      {#each $graphStore.adjMatrix as vertex, idx}
+        <Collapsible title="Vertex {idx}">
+          <ul>
+            {#each $graphStore.adjMatrix[idx] as edge, edgeIdx}
+              {#if edge === 1}
+                <li>Edge to vertex {edgeIdx}</li>
+              {/if}
+            {/each}
+          </ul>
+        </Collapsible>
+      {/each}
     {/if}
   </div>
 </div>
@@ -94,8 +101,15 @@
     background-color: #e7e7e7;
   }
 
+  .graph-panel__navigation .navigation-btn > input[type="radio"]:checked {
+    background-color: #e7e7e7;
+  }
+
   .graph-panel__container .graph-panel__content {
     width: 100%;
     height: 100%;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 </style>

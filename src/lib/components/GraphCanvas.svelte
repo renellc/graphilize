@@ -127,6 +127,10 @@
           switch ($uiStore.selectedControl) {
             case "addEdge": {
               if ($canvasStore.isDrawing) {
+                graphStore.addEdge({
+                  fromVertexIdx: drawingEdge.startVertex,
+                  toVertexIdx: vertexIdx,
+                });
                 canvasStore.addEdgeElement({
                   fromVertexId: drawingEdge.startVertex,
                   toVertexId: vertexIdx,
